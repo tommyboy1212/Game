@@ -13,7 +13,7 @@ public class TimeSync {
 	private long nanoSinceSecond = 0;
 	private long nanoToWait = 0;
 	private boolean isSlow = false;
-	private long nanoSlowTime = 0;
+	private long nanoErrorFeedback = 0;
 
 	public TimeSync() {
 		setTargetTPS(this.targetTPS);
@@ -34,13 +34,13 @@ public class TimeSync {
 
 	private void sleep() {
 		long currNano = System.nanoTime();
-		long timeToBe = currNano + this.nanoToWait;
+		long alarmSet = currNano + this.nanoToWait;
 		try {
-			while (timeToBe > (currNano+this.nanoSlowTime)) {
+			while ((currNano+this.nanoErrorFeedback) < alarmSet) {
 				Thread.sleep((long)(1.0f/this.targetTPS*MILLI_IN_SECOND));
 				currNano = System.nanoTime();
 			}
-			this.nanoSlowTime = currNano - timeToBe;
+			this.nanoErrorFeedback = currNano - alarmSet;
 		} catch (InterruptedException e) {}
 		finally {
 			this.setActualTPS();

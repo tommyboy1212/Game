@@ -25,6 +25,9 @@ import static org.lwjgl.opengl.GL11.glMatrixMode;
 import static org.lwjgl.opengl.GL11.glViewport;
 
 import java.awt.Canvas;
+import java.io.PrintStream;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.logging.Logger;
 
 import org.lwjgl.LWJGLException;
@@ -35,6 +38,7 @@ import org.lwjgl.util.glu.Project;
 
 import com.flipflop.game.DisplayUtil;
 import com.flipflop.game.daemon.Daemon;
+import com.flipflop.game.daemon.TimeSync;
 
 public class RenderDaemon extends Daemon {
 
@@ -44,6 +48,8 @@ public class RenderDaemon extends Daemon {
 	private String appName;
 	private Canvas canvas;
 	private Renderable renderer;
+	
+	private Timer fpsPrintTimer;
 	
 	public RenderDaemon(Canvas canvas, DisplayMode targetDisplayMode, Renderable renderer, String appName) {
 		super("RenderLoop");
@@ -129,5 +135,28 @@ public class RenderDaemon extends Daemon {
 	
 	public float getFPS() {
 		return super.timeSync.getActualTPS();
+	}
+	
+	public void printFPS(long interval) {
+		printFPS(interval, System.out);
+	}
+	public void printFPS(long interval, PrintStream out) {
+		this.fpsPrintTimer = new Timer("FPS Timer", true);
+		this.fpsPrintTimer.scheduleAtFixedRate(new FPSPrintTask(out, this.timeSync), 0, interval);
+		
+		out.println(getFPS());
+	}
+	
+	class FPSPrintTask extends TimerTask {
+		private PrintStream out;
+		private TimeSync sync;
+		public FPSPrintTask(PrintStream out, TimeSync sync) {
+			this.out = out;
+			this.sync = sync;
+		}
+		@Override
+		public void run() {
+			out.println("FPS: "+sync.getActualTPS());
+		}
 	}
 }

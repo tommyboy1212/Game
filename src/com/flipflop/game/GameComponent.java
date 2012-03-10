@@ -282,6 +282,8 @@ public abstract class GameComponent extends Canvas implements WindowListener, Re
 	}
 
 	public void stop() {
+		int count = 1;
+		int total = this.daemons.values().size();
 		for (Daemon daemon : this.daemons.values().toArray(new Daemon[0])) {
 			daemon.stop();
 			try {
@@ -290,7 +292,8 @@ public abstract class GameComponent extends Canvas implements WindowListener, Re
 			} catch( InterruptedException e) {
 				logger.warning("Interrupted on join "+daemon.getDaemonName()+". Giving up.");
 			}
-			logger.info("Joined "+daemon.getDaemonName()+".");
+			logger.info("Joined "+daemon.getDaemonName()+". ("+count+++"/"+total+")");
+			count++;
 		}
 	}
 	

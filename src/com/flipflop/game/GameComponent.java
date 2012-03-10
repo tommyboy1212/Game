@@ -25,6 +25,7 @@ import org.lwjgl.util.Renderable;
 import com.flipflop.game.daemon.Daemon;
 import com.flipflop.game.daemon.render.RenderDaemon;
 import com.flipflop.game.input.InputDaemon;
+import com.flipflop.game.daemon.TimeSync;
 
 /**
  * 
@@ -59,8 +60,8 @@ public abstract class GameComponent extends Canvas implements WindowListener, Re
 	
 	// TODO Make this a daemon manager that can assign ids.
 	private HashMap<Integer, Daemon> daemons = new HashMap<Integer, Daemon>();
-	private Daemon renderDaemon;
-	private Daemon inputDaemon;
+	private RenderDaemon renderDaemon;
+	private InputDaemon inputDaemon;
 
 	/**
 	 * Constructs the {@link GameComponent}.
@@ -206,7 +207,7 @@ public abstract class GameComponent extends Canvas implements WindowListener, Re
 		DisplayMode target = new DisplayMode(this.width, this.height);
 		daemons.put(1, this.renderDaemon = new RenderDaemon(this, target, this, this.appName));
 		daemons.put(2, this.inputDaemon = new InputDaemon());
-
+		this.renderDaemon.printFPS((long)1*TimeSync.MILLI_IN_SECOND);
 		
 		
 		logger.info("Initialized GameComponent.");

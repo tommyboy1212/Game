@@ -20,10 +20,10 @@ import javax.swing.UnsupportedLookAndFeelException;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
+import org.lwjgl.util.Renderable;
 
 import com.flipflop.game.daemon.Daemon;
 import com.flipflop.game.daemon.render.RenderDaemon;
-import com.flipflop.game.daemon.render.Renderable;
 import com.flipflop.game.input.InputDaemon;
 
 /**

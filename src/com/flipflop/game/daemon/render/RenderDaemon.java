@@ -30,6 +30,7 @@ import java.util.logging.Logger;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
+import org.lwjgl.util.Renderable;
 import org.lwjgl.util.glu.Project;
 
 import com.flipflop.game.DisplayUtil;

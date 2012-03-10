@@ -1,5 +1,6 @@
 package com.flipflop.game.daemon;
 
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Logger;
 
 /**
@@ -15,10 +16,7 @@ public abstract class Daemon implements Runnable {
 	protected static final Logger logger = Logger.getLogger(Daemon.class.getName());
 	private String daemonName = "DaemonThread";
 	private Thread daemon;
-	private boolean running = false;
-	private boolean isDone = false;
-	private boolean hasStarted = false;
-	private final Boolean startLock = new Boolean(true);
+	private AtomicBoolean running = new AtomicBoolean(true);
 	protected TimeSync timeSync = new TimeSync();
 
 	public Daemon() {
@@ -33,45 +31,23 @@ public abstract class Daemon implements Runnable {
 	}
 
 	public void start() {
-		this.running = true;
+		this.running.set(true);
 		this.daemon = new Thread(this, daemonName);
 		this.daemon.start();
 	}
 
 	public void stop() {
-		this.running = false;
+		this.running.set(false);
 	}
 	
 	public void join(long millis) throws InterruptedException {
 		this.daemon.join(millis);
 	}
 
-	public boolean waitForStart(int milli) {
-		synchronized (this.startLock) {
-			if (!this.hasStarted) {
-				try {
-					this.startLock.wait(milli);
-				} catch (InterruptedException e) {
-				}
-			}
-		}
-		return this.hasStarted;
-	}
-
-	public boolean isRunning() {
-		return (this.hasStarted && this.running);
-	}
-
 	@Override
 	public void run() {
 		init();
-		while (this.running) {
-			if (!this.hasStarted) {
-				synchronized (this.startLock) {
-					this.hasStarted = true;
-					this.startLock.notify();
-				}
-			}
+		while (this.running.get()) {
 			execute();
 			this.timeSync.syncTPS();
 		}

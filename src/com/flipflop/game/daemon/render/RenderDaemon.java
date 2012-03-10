@@ -25,6 +25,7 @@ import static org.lwjgl.opengl.GL11.glMatrixMode;
 import static org.lwjgl.opengl.GL11.glViewport;
 
 import java.awt.Canvas;
+import java.util.logging.Logger;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.Display;
@@ -36,6 +37,7 @@ import com.flipflop.game.daemon.Daemon;
 
 public class RenderDaemon extends Daemon {
 
+	private static final Logger logger = Logger.getLogger(RenderDaemon.class.getName());
 	private DisplayMode currentDisplayMode;
 	private DisplayMode targetDisplayMode;
 	private String appName;

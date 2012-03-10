@@ -1,5 +1,5 @@
 package com.flipflop.game.daemon.render;
 
-public interface Renderer {
+public interface Renderable {
 	public void render();
 }

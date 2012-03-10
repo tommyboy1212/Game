@@ -16,8 +16,8 @@ public abstract class Daemon implements Runnable {
 	protected static final Logger logger = Logger.getLogger(Daemon.class.getName());
 	private String daemonName = "DaemonThread";
 	private Thread daemon;
-	private AtomicBoolean running = new AtomicBoolean(true);
-	protected TimeSync timeSync = new TimeSync();
+	private final AtomicBoolean running = new AtomicBoolean(true);
+	protected final TimeSync timeSync = new TimeSync();
 
 	public Daemon() {
 	}

@@ -23,7 +23,7 @@ import org.lwjgl.opengl.DisplayMode;
 
 import com.flipflop.game.daemon.Daemon;
 import com.flipflop.game.daemon.render.RenderDaemon;
-import com.flipflop.game.daemon.render.Renderer;
+import com.flipflop.game.daemon.render.Renderable;
 import com.flipflop.game.input.InputDaemon;
 
 /**
@@ -35,7 +35,7 @@ import com.flipflop.game.input.InputDaemon;
  *         libraries. This abstract class must be extended by a class that
  *         wishes to use the abilities provided.
  */
-public abstract class GameComponent extends Canvas implements WindowListener, Renderer {
+public abstract class GameComponent extends Canvas implements WindowListener, Renderable {
 	private static final long serialVersionUID = 1L; // This is meaningless.
 														// Don't worry about it.
 

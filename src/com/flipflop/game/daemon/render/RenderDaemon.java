@@ -42,9 +42,9 @@ public class RenderDaemon extends Daemon {
 	private DisplayMode targetDisplayMode;
 	private String appName;
 	private Canvas canvas;
-	private Renderer renderer;
+	private Renderable renderer;
 	
-	public RenderDaemon(Canvas canvas, DisplayMode targetDisplayMode, Renderer renderer, String appName) {
+	public RenderDaemon(Canvas canvas, DisplayMode targetDisplayMode, Renderable renderer, String appName) {
 		super("RenderLoop");
 		this.canvas = canvas;
 		this.appName = appName;

@@ -1,30 +1,45 @@
 package com.flipflop.game.graphic;
 
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_LINE_LOOP;
+import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
+import static org.lwjgl.opengl.GL11.GL_QUADS;
+import static org.lwjgl.opengl.GL11.glBegin;
+import static org.lwjgl.opengl.GL11.glColor3f;
+import static org.lwjgl.opengl.GL11.glEnd;
+import static org.lwjgl.opengl.GL11.glLineWidth;
+import static org.lwjgl.opengl.GL11.glLoadIdentity;
+import static org.lwjgl.opengl.GL11.glMatrixMode;
+import static org.lwjgl.opengl.GL11.glPopMatrix;
+import static org.lwjgl.opengl.GL11.glPushMatrix;
+import static org.lwjgl.opengl.GL11.glRotatef;
+import static org.lwjgl.opengl.GL11.glTranslatef;
+import static org.lwjgl.opengl.GL11.glVertex3f;
+
+import org.lwjgl.util.vector.Vector3f;
 
 public class RecPrism implements Drawable {
 
 	// Indices of v to create faces.  Dependent on the order in which v is instantiated.
 	private static int[][] faces = {{2,1,5,6}, {3,0,4,7}, {7,3,2,6}, {0,4,5,1}, {3,0,1,2}, {4,7,6,5}};
-	protected Vec3[] v;
-	protected Vec3[] faceColor = new Vec3[6];
-	protected Vec3[] indexColor = new Vec3[8];
-	protected Vec3 center;
-	protected Vec3 rot = new Vec3(0.0f, 0.0f, 0.0f);
+	protected Vector3f[] v;
+	protected Vector3f[] faceColor = new Vector3f[6];
+	protected Vector3f[] indexColor = new Vector3f[8];
+	protected Vector3f center;
+	protected Vector3f rot = new Vector3f(0.0f, 0.0f, 0.0f);
 	protected float degree = 0.0f;
 
 
 	static {
 	}
 
-	public RecPrism(Vec3 center, Vec3 rot, float width, float height, float depth, float degree) {
+	public RecPrism(Vector3f center, Vector3f rot, float width, float height, float depth, float degree) {
 		this.center = center;
 		this.rot = rot;
 		this.degree = degree;
 		initVertices(width, height, depth);
 	}
 	
-	public RecPrism(Vec3 center, float width, float height, float depth) {
+	public RecPrism(Vector3f center, float width, float height, float depth) {
 		this.center = center;
 		initVertices(width, height, depth);
 	}
@@ -33,15 +48,15 @@ public class RecPrism implements Drawable {
 		float depthBy2 = depth / 2;
 		float widthBy2 = width / 2;
 		float heightBy2 = height / 2;
-		v = new Vec3[8];
-		v[0] = new Vec3(( + widthBy2), ( - heightBy2), ( + depthBy2));
-		v[1] = new Vec3(( + widthBy2), ( + heightBy2), ( + depthBy2));
-		v[2] = new Vec3(( - widthBy2), ( + heightBy2), ( + depthBy2));
-		v[3] = new Vec3(( - widthBy2), ( - heightBy2), ( + depthBy2));
-		v[4] = new Vec3(( + widthBy2), ( - heightBy2), ( - depthBy2));
-		v[5] = new Vec3(( + widthBy2), ( + heightBy2), ( - depthBy2));
-		v[6] = new Vec3(( - widthBy2), ( + heightBy2), ( - depthBy2));
-		v[7] = new Vec3(( - widthBy2), ( - heightBy2), ( - depthBy2));
+		v = new Vector3f[8];
+		v[0] = new Vector3f(( + widthBy2), ( - heightBy2), ( + depthBy2));
+		v[1] = new Vector3f(( + widthBy2), ( + heightBy2), ( + depthBy2));
+		v[2] = new Vector3f(( - widthBy2), ( + heightBy2), ( + depthBy2));
+		v[3] = new Vector3f(( - widthBy2), ( - heightBy2), ( + depthBy2));
+		v[4] = new Vector3f(( + widthBy2), ( - heightBy2), ( - depthBy2));
+		v[5] = new Vector3f(( + widthBy2), ( + heightBy2), ( - depthBy2));
+		v[6] = new Vector3f(( - widthBy2), ( + heightBy2), ( - depthBy2));
+		v[7] = new Vector3f(( - widthBy2), ( - heightBy2), ( - depthBy2));
 	}
 
 	@Override
@@ -77,7 +92,7 @@ public class RecPrism implements Drawable {
 		glPopMatrix();
 	}
 	
-	public void rotate(Vec3 rot, float degree) {
+	public void rotate(Vector3f rot, float degree) {
 		this.rot = rot;
 		this.degree = degree;
 	}

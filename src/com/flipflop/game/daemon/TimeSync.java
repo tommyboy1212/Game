@@ -1,9 +1,9 @@
 package com.flipflop.game.daemon;
 
 public class TimeSync {
-	private static final long NANO_IN_SECOND = 1000 * 1000 * 1000;
-	private static final long NANO_IN_MILLI = 1000 * 1000;
-	private static final long NANO_IN_MICRO = 1000;
+	public static final long NANO_IN_SECOND = 1000 * 1000 * 1000;
+	public static final long NANO_IN_MILLI = 1000 * 1000;
+	public static final long NANO_IN_MICRO = 1000;
 	private long lastTickAtNano = System.nanoTime();
 	private float targetTPS = 60.0f;
 	private float actualTPS = 0.0f;

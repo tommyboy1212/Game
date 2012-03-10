@@ -4,6 +4,7 @@ public class TimeSync {
 	public static final long NANO_IN_SECOND = 1000 * 1000 * 1000;
 	public static final long NANO_IN_MILLI = 1000 * 1000;
 	public static final long NANO_IN_MICRO = 1000;
+	public static final long MILLI_IN_SECOND= 1000;
 	private long lastTickAtNano = System.nanoTime();
 	private float targetTPS = 60.0f;
 	private float actualTPS = 0.0f;
@@ -35,7 +36,11 @@ public class TimeSync {
 		long currNano = System.nanoTime();
 		long timeToBe = currNano + this.nanoToWait;
 		try {
-			while (timeToBe < currNano) {Thread.sleep(1);}
+			while (timeToBe > (currNano+this.nanoSlowTime)) {
+				Thread.sleep((long)(1.0f/this.targetTPS*MILLI_IN_SECOND));
+				currNano = System.nanoTime();
+			}
+			this.nanoSlowTime = currNano - timeToBe;
 		} catch (InterruptedException e) {}
 		finally {
 			this.setActualTPS();
@@ -64,5 +69,9 @@ public class TimeSync {
 			this.actualTPS = (float) this.ticks / (this.nanoSinceSecond * NANO_IN_SECOND);
 			this.nanoSinceSecond = 0;
 		}
+	}
+	
+	public float getRunTime() {
+		return this.runTime;
 	}
 }

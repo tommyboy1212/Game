@@ -46,14 +46,16 @@ public abstract class Daemon implements Runnable {
 
 	@Override
 	public void run() {
-		init();
+		this.init();
 		while (this.running.get()) {
 			execute();
 			this.timeSync.syncTPS();
 		}
+		this.cleanUp();
 	}
 
 	public abstract void execute();
 	public abstract void init();
+	public abstract void cleanUp();
 
 }

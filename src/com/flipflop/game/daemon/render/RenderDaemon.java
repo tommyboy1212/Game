@@ -128,6 +128,11 @@ public class RenderDaemon extends Daemon {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 	
+	@Override
+	public void cleanUp() {
+		this.fpsPrintTimer.cancel();
+	}
+	
 	public float getFPS() {
 		return super.timeSync.getActualTPS();
 	}
@@ -138,8 +143,6 @@ public class RenderDaemon extends Daemon {
 	public void printFPS(long interval, PrintStream out) {
 		this.fpsPrintTimer = new Timer("FPS Timer", true);
 		this.fpsPrintTimer.scheduleAtFixedRate(new FPSPrintTask(out, this.timeSync), 0, interval);
-		
-		out.println(getFPS());
 	}
 	
 	class FPSPrintTask extends TimerTask {

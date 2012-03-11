@@ -75,11 +75,6 @@ public class RenderDaemon extends Daemon {
 		}
 	}
 
-	public void stop() {
-		// TODO Implement clean up.
-		// cleanUpLWJGL();
-	}
-
 	@Override
 	public void execute() {
 		//Display.sync(60);

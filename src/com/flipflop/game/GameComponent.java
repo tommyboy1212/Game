@@ -42,7 +42,6 @@ public abstract class GameComponent extends Canvas implements WindowListener, Re
 
 	private static final Logger logger = Logger.getLogger(GameComponent.class.getName());
 	private static GameComponent instance;
-	private boolean running = false; // GameLoop controller.
 	private String appName = "Game"; // Game's name. Should be initialized in a
 										// constructor.
 	private JFrame mainWindow; // The main window in which a OpenGL context will
@@ -93,7 +92,6 @@ public abstract class GameComponent extends Canvas implements WindowListener, Re
 	public GameComponent(String name, int width, int height, boolean fullscreen) throws LWJGLException {
 		init(name, width, height, fullscreen);
 	}
-
 	/**
 	 * Constructs the {@link GameComponent} in windowed mode with the dimensions
 	 * <code>width</code>x<code>height</code>.
@@ -110,7 +108,6 @@ public abstract class GameComponent extends Canvas implements WindowListener, Re
 	public GameComponent(String name, int width, int height) throws LWJGLException {
 		init(name, width, height, this.isFullscreen);
 	}
-
 	/**
 	 * Constructs the {@link GameComponent} in windowed mode with the dimensions
 	 * 640x400.
@@ -127,7 +124,6 @@ public abstract class GameComponent extends Canvas implements WindowListener, Re
 	public GameComponent(String name) throws LWJGLException {
 		init(name, this.width, this.height, this.isFullscreen);
 	}
-
 	/**
 	 * Constructs the {@link GameComponent}.
 	 * 
@@ -159,7 +155,6 @@ public abstract class GameComponent extends Canvas implements WindowListener, Re
 	public GameComponent(int width, int height, boolean fullscreen) throws LWJGLException {
 		init(this.appName, width, height, fullscreen);
 	}
-
 	/**
 	 * Constructs the {@link GameComponent} in windowed mode with the dimensions
 	 * <code>width</code>x<code>height</code>.
@@ -177,7 +172,6 @@ public abstract class GameComponent extends Canvas implements WindowListener, Re
 	public GameComponent(int width, int height) throws LWJGLException {
 		init(this.appName, width, height, this.isFullscreen);
 	}
-
 	/**
 	 * Constructs the {@link GameComponent} in windowed mode with the dimensions
 	 * <code>640</code>x<code>400</code>.
@@ -198,6 +192,9 @@ public abstract class GameComponent extends Canvas implements WindowListener, Re
 
 	private void init(String name, int width, int height, boolean isFullscreen) throws LWJGLException {
 		logger.fine("Initializing GameComponent...");
+		System.setProperty("apple.laf.useScreenMenuBar", "true");
+		System.setProperty("apple.awt.brushMetalLook", "true");
+		System.setProperty("com.apple.mrj.application.apple.menu.about.name", this.appName);
 		instance = this;
 		this.width = width;
 		this.height = height;
@@ -206,9 +203,8 @@ public abstract class GameComponent extends Canvas implements WindowListener, Re
 		this.desktopDisplayMode = Display.getDesktopDisplayMode();
 		DisplayMode target = new DisplayMode(this.width, this.height);
 		daemons.put(1, this.renderDaemon = new RenderDaemon(this, target, this, this.appName));
-		daemons.put(2, this.inputDaemon = new InputDaemon());
+		daemons.put(2, this.inputDaemon = new InputDaemon(this));
 		this.renderDaemon.printFPS((long)1*TimeSync.MILLI_IN_SECOND);
-		
 		
 		logger.info("Initialized GameComponent.");
 	}
@@ -234,9 +230,7 @@ public abstract class GameComponent extends Canvas implements WindowListener, Re
 		int y = this.desktopDisplayMode.getHeight() / 2 - this.height / 2;
 		final Dimension dim = new Dimension(this.width, this.height);
 		try {
-			System.setProperty("com.apple.macos.useScreenMenuBars", "false");
-			System.setProperty("com.apple.mrj.application.apple.menu.about.name", this.appName);
-			UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (InstantiationException e) {
@@ -259,7 +253,7 @@ public abstract class GameComponent extends Canvas implements WindowListener, Re
 		});
 		gameMenu.add(quitItem);
 		menuBar.add(gameMenu);
-		// mainWindow.add(menuBar, BorderLayout.NORTH);
+		mainWindow.add(menuBar);
 		mainWindow.setMinimumSize(dim);
 		mainWindow.setMaximumSize(dim);
 		mainWindow.setSize(dim);
@@ -293,17 +287,14 @@ public abstract class GameComponent extends Canvas implements WindowListener, Re
 			} catch( InterruptedException e) {
 				logger.warning("Interrupted on join "+daemon.getDaemonName()+". Giving up.");
 			}
-			logger.info("Joined "+daemon.getDaemonName()+". ("+count+++"/"+total+")");
+			logger.info("Joined "+daemon.getDaemonName()+". ("+count+"/"+total+")");
 			count++;
 		}
+		this.cleanUpWindow();
 	}
 	
-	protected void cleanUpWindow() {
+	private void cleanUpWindow() {
 		this.mainWindow.dispose();
-	}
-
-	public boolean isRunning() {
-		return running;
 	}
 
 	@Override

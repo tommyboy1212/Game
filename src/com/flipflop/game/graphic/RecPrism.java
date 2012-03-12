@@ -1,19 +1,6 @@
 package com.flipflop.game.graphic;
 
-import static org.lwjgl.opengl.GL11.GL_LINE_LOOP;
-import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
-import static org.lwjgl.opengl.GL11.GL_QUADS;
-import static org.lwjgl.opengl.GL11.glBegin;
-import static org.lwjgl.opengl.GL11.glColor3f;
-import static org.lwjgl.opengl.GL11.glEnd;
-import static org.lwjgl.opengl.GL11.glLineWidth;
-import static org.lwjgl.opengl.GL11.glLoadIdentity;
-import static org.lwjgl.opengl.GL11.glMatrixMode;
-import static org.lwjgl.opengl.GL11.glPopMatrix;
-import static org.lwjgl.opengl.GL11.glPushMatrix;
-import static org.lwjgl.opengl.GL11.glRotatef;
-import static org.lwjgl.opengl.GL11.glTranslatef;
-import static org.lwjgl.opengl.GL11.glVertex3f;
+import static org.lwjgl.opengl.GL11.*;
 
 import org.lwjgl.util.vector.Vector3f;
 
@@ -67,10 +54,10 @@ public class RecPrism implements Drawable {
 
 		glLineWidth(1.0f);
 		glColor3f(0.5f,0.5f,1.0f);
-		
+		glPolygonMode(GL_FRONT, GL_FILL);
 		glTranslatef(center.x, center.y, center.z);
 		glRotatef(this.degree, rot.x, rot.y, rot.z);
-		
+		glPolygonOffset(1.0f, 1.0f);
 		glBegin(GL_QUADS);
 		for (int i=0; i<faces.length; i++) {
 			for (int j=0; j<faces[i].length; j++) {
@@ -80,7 +67,6 @@ public class RecPrism implements Drawable {
 		glEnd();
 
 		glColor3f(0.0f,0.0f,0.0f);
-		
 		for (int i=0; i<faces.length; i++) {
 			glBegin(GL_LINE_LOOP);
 			for (int j=0; j<faces[i].length; j++) {

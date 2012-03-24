@@ -40,37 +40,37 @@ public class InputDaemon extends Daemon implements MouseListener, MouseMotionLis
 
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
-		System.out.println("Mouse clicked");
+		
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent arg0) {
-		System.out.println("Mouse entered");		
+				
 	}
 
 	@Override
 	public void mouseExited(MouseEvent arg0) {
-		System.out.println("Mouse exited");
+		
 	}
 
 	@Override
 	public void mousePressed(MouseEvent arg0) {
-		System.out.println("Mouse pressed: "+arg0.paramString());
+		
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent arg0) {
-		System.out.println("Mouse released: "+arg0.paramString());
+		
 	}
 
 	@Override
 	public void mouseDragged(MouseEvent arg0) {
-		System.out.println("Mouse dragged: "+arg0.paramString());
+		
 	}
 
 	@Override
 	public void mouseMoved(MouseEvent arg0) {
-		System.out.println("Mouse moved: "+arg0.paramString());
+		
 	}
 
 	public boolean isInitSuccess() {

@@ -23,8 +23,8 @@ import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.util.Renderable;
 
 import com.flipflop.game.daemon.Daemon;
-import com.flipflop.game.daemon.render.RenderDaemon;
 import com.flipflop.game.input.InputDaemon;
+import com.flipflop.game.render.RenderDaemon;
 import com.flipflop.game.daemon.TimeSync;
 
 /**
@@ -205,7 +205,7 @@ public abstract class GameComponent extends Canvas implements WindowListener, Re
 		daemons.put(1, this.renderDaemon = new RenderDaemon(this, target, this, this.appName));
 		daemons.put(2, this.inputDaemon = new InputDaemon(this));
 		this.renderDaemon.printFPS((long)1*TimeSync.MILLI_IN_SECOND);
-		
+		this.inputDaemon.getDaemonName();//TODO DELETE THIS
 		logger.info("Initialized GameComponent.");
 	}
 

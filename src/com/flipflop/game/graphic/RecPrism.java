@@ -2,6 +2,10 @@ package com.flipflop.game.graphic;
 
 import static org.lwjgl.opengl.GL11.*;
 
+import java.nio.FloatBuffer;
+
+import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.GL14;
 import org.lwjgl.util.vector.Vector3f;
 
 public class RecPrism implements Drawable {
@@ -14,6 +18,7 @@ public class RecPrism implements Drawable {
 	protected Vector3f center;
 	protected Vector3f rot = new Vector3f(0.0f, 0.0f, 0.0f);
 	protected float degree = 0.0f;
+	protected FloatBuffer vertexBuffer;
 
 
 	static {
@@ -44,6 +49,13 @@ public class RecPrism implements Drawable {
 		v[5] = new Vector3f(( + widthBy2), ( + heightBy2), ( - depthBy2));
 		v[6] = new Vector3f(( - widthBy2), ( + heightBy2), ( - depthBy2));
 		v[7] = new Vector3f(( - widthBy2), ( - heightBy2), ( - depthBy2));
+		
+		this.vertexBuffer = BufferUtils.createFloatBuffer(8*3);
+		for (Vector3f vec : v) {
+			this.vertexBuffer.put(vec.x);
+			this.vertexBuffer.put(vec.y);
+			this.vertexBuffer.put(vec.z);
+		}
 	}
 
 	@Override
@@ -52,12 +64,28 @@ public class RecPrism implements Drawable {
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 
-		glLineWidth(1.0f);
+		glLineWidth(2.0f);
 		glColor3f(0.5f,0.5f,1.0f);
 		glPolygonMode(GL_FRONT, GL_FILL);
 		glTranslatef(center.x, center.y, center.z);
 		glRotatef(this.degree, rot.x, rot.y, rot.z);
+		glEnable(GL_POLYGON_OFFSET_FILL);
+		glEnable(GL_LIGHTING);
+		glEnable(GL_LIGHT0);
 		glPolygonOffset(1.0f, 1.0f);
+		//glEnableClientState(GL_VERTEX_ARRAY);
+		//glVertexPointer(3, 0, this.vertexBuffer);
+		
+//		glBegin(GL_QUADS);
+//		{
+//			for(int i=0; i<faces.length; i++) {
+//				for(int j=0; j<faces[i].length; j++) {
+//					glArrayElement(faces[i][j]);
+//				}
+//			}
+//		}
+//		glEnd();
+
 		glBegin(GL_QUADS);
 		for (int i=0; i<faces.length; i++) {
 			for (int j=0; j<faces[i].length; j++) {
@@ -65,8 +93,8 @@ public class RecPrism implements Drawable {
 			}
 		}
 		glEnd();
-
-		glColor3f(0.0f,0.0f,0.0f);
+		glDisable(GL_LIGHTING);
+		glColor3f(0.0f,1.0f,0.0f);
 		for (int i=0; i<faces.length; i++) {
 			glBegin(GL_LINE_LOOP);
 			for (int j=0; j<faces[i].length; j++) {

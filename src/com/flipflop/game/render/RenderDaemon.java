@@ -1,28 +1,6 @@
-package com.flipflop.game.daemon.render;
+package com.flipflop.game.render;
 
-import static org.lwjgl.opengl.GL11.GL_BACK;
-import static org.lwjgl.opengl.GL11.GL_BLEND;
-import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
-import static org.lwjgl.opengl.GL11.GL_LINE_SMOOTH;
-import static org.lwjgl.opengl.GL11.GL_LINE_SMOOTH_HINT;
-import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
-import static org.lwjgl.opengl.GL11.GL_NICEST;
-import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
-import static org.lwjgl.opengl.GL11.GL_PROJECTION;
-import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
-import static org.lwjgl.opengl.GL11.GL_VERSION;
-import static org.lwjgl.opengl.GL11.glBlendFunc;
-import static org.lwjgl.opengl.GL11.glClear;
-import static org.lwjgl.opengl.GL11.glClearColor;
-import static org.lwjgl.opengl.GL11.glCullFace;
-import static org.lwjgl.opengl.GL11.glEnable;
-import static org.lwjgl.opengl.GL11.glGetString;
-import static org.lwjgl.opengl.GL11.glHint;
-import static org.lwjgl.opengl.GL11.glLoadIdentity;
-import static org.lwjgl.opengl.GL11.glMatrixMode;
-import static org.lwjgl.opengl.GL11.glViewport;
+import static org.lwjgl.opengl.GL11.*;
 
 import java.awt.Canvas;
 import java.io.PrintStream;
@@ -34,6 +12,7 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.util.Renderable;
+import org.lwjgl.util.glu.GLU;
 import org.lwjgl.util.glu.Project;
 
 import com.flipflop.game.DisplayUtil;
@@ -83,7 +62,13 @@ public class RenderDaemon extends Daemon {
 
 		// Let Renderer know it's time to draw.
 		this.renderer.render();
-
+		
+		int errCode;
+		String errString;
+		while ((errCode = glGetError()) != GL_NO_ERROR) {
+			errString = GLU.gluErrorString(errCode);
+			logger.warning("GL ERROR: " + errString);
+		}
 		// Swap buffers. Display is by default a double-buffer
 		// configuration.
 		Display.update();
@@ -112,6 +97,8 @@ public class RenderDaemon extends Daemon {
 	 */
 	private void initOpenGL() throws LWJGLException {
 		logger.config("OpenGL Version: " + glGetString(GL_VERSION));
+		logger.config("Renderer: " + glGetString(GL_RENDERER));
+		logger.config("Extensions: " + glGetString(GL_EXTENSIONS));
 		glViewport(0, 0, this.currentDisplayMode.getWidth(), this.currentDisplayMode.getHeight());
 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_BLEND);
@@ -124,7 +111,7 @@ public class RenderDaemon extends Daemon {
 		float aspect = this.currentDisplayMode.getWidth() / this.currentDisplayMode.getHeight();
 		Project.gluPerspective(45.0f, aspect, 0.1f, 25.0f);
 		glMatrixMode(GL_MODELVIEW);
-		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 	
